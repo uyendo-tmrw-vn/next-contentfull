@@ -196,7 +196,7 @@
 
   .center::before {
     transform: none;
-    height: 300px;
+    height: 301px;
   }
 
   .description {
