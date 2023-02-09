@@ -1,8 +1,8 @@
-import * as contentful from "contentful"
+import { createClient } from "contentful";
 
-var client = contentful.createClient({
+var client = createClient({
   space: process.env.CONTENTFUL_SPACE_ID,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+  accessToken: process.env.CONTENTFUL_ACCESS_KEY,
 });
 
 export default function ProductPage(props) {
@@ -17,23 +17,29 @@ export default function ProductPage(props) {
   }
 
   return (
-    <div>
-      <h1>{props.heading}</h1>
-      <h2>{props.subheading}</h2>
+    <div className="text-center mt-[30px]">
+      <h1 className="text-[2.5rem]">{props.name}</h1>
+      <h2 className="text-[1.5rem]">{props.description}</h2>
+      <figure className="text-center">
+        {
+          props.picture && props.picture.map((item, index) => {
+            return (
+              <img className="mx-auto" key={index} src={item.fields.file.url} />
+            )
+          })
+        }
+      </figure>
     </div>
   )
 }
 
 export async function getStaticPaths() {
-  const products = await client
-    .getEntries({
-      content_type: 'productReview',
-    })
-
-  const paths = products.items.map(product => ({
-    params: {
-      slug: product.fields.productId
-    }
+  const products = await client.getEntries({
+    content_type: 'animal',
+  })
+  // console.log({ products });
+  const paths = products.items.map(product => (console.log(11, product), {
+    params: { slug: product.fields.id.toString() }
   }))
 
   console.log("paths: ", paths)
@@ -44,21 +50,20 @@ export async function getStaticPaths() {
   }
 }
 
-export async function getStaticProps(context) {
+export async function getStaticProps({ params }) {
   // Get data from headless CMS
-  const product = await client
-    .getEntries({
-      content_type: 'productReview',
-      limit: 1,
-      "fields.productId": context.params.slug,
-    })
-  
-  console.log("products: ", product)
+  const product = await client.getEntries({
+    content_type: 'animal',
+    limit: 1,
+  })
+
+  const post = product.items;
 
   return {
     props: {
-      error: !product.items.length 
-        && `No product with id: ${context.params.slug}`,
+      post,
+      error: !product.items.length
+        && `No product with id: ${params.slug}`,
       ...product?.items?.[0]?.fields
     },
   }
