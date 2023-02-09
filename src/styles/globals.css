@@ -1,3 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+button {
+  @apply bg-[#4e4949] px-[10px] rounded-[4px];
+}
+
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
@@ -74,4 +82,8 @@ a {
   html {
     color-scheme: dark;
   }
+}
+
+video {
+  @apply w-full;
 }
