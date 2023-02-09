@@ -1,40 +1,8 @@
 import Head from 'next/head'
-
 import { createClient } from 'contentful';
+import { useEffect, useState } from 'react';
 
-// export async function getStaticProps() {
-//   const client = createClient({
-//     space: process.env.CONTENTFUL_SPACE_ID,
-//     accessToken: process.env.CONTENTFUL_ACCESS_KEY
-//   })
-
-//   const res = await client.getEntries({ content_type: "animal" })
-//   return {
-//     props: {
-//       animalList: res.items
-//     }
-//   }
-// }
-
-export async function getStaticPaths() {
-
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID,
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY
-  })
-
-  const res = await client.getEntries({ content_type: "animal" })
-
-  const x = await res.items.json();
-  const Result = x.data.map(post => ({ params: { id: post.id.toString() } }));
-  console.log({ Result });
-
-  return {
-    paths: Result,
-    fallback: false
-  }
-}
-export async function getStaticProps({ params }) {
+export async function getStaticProps() {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
     accessToken: process.env.CONTENTFUL_ACCESS_KEY
@@ -48,9 +16,14 @@ export async function getStaticProps({ params }) {
   }
 }
 
-
 export default function Home({ animalList }) {
-  console.log({ animalList });
+  // const [animalList, setAnimalList] = useState([])
+
+  useEffect(() => {
+
+
+  }, [])
+
   return (
     <>
       <Head>
@@ -124,7 +97,7 @@ export default function Home({ animalList }) {
           <h1 className='text-center text-[3rem]'>Demo for call api from Contentful</h1>
           <ul className='flex mt-[2rem]'>
             {
-              animalList && animalList.length && animalList.map((item, index) => {
+              animalList && animalList.length > 0 ? animalList.map((item, index) => {
                 return (
                   <li key={index} className="flex mb-[10px] bg-[grey] rounded-[10px] overflow-hidden mr-[10px]">
                     <figure className='max-w-[80px] bg-[#fff] rounded-[10px] overflow-hidden'>
@@ -142,7 +115,7 @@ export default function Home({ animalList }) {
                     </div>
                   </li>
                 )
-              })
+              }) : ''
             }
           </ul>
         </div>
