@@ -2,39 +2,7 @@ import Head from 'next/head'
 
 import { createClient } from 'contentful';
 
-// export async function getStaticProps() {
-//   const client = createClient({
-//     space: process.env.CONTENTFUL_SPACE_ID,
-//     accessToken: process.env.CONTENTFUL_ACCESS_KEY
-//   })
-
-//   const res = await client.getEntries({ content_type: "animal" })
-//   return {
-//     props: {
-//       animalList: res.items
-//     }
-//   }
-// }
-
-export async function getStaticPaths() {
-
-  const client = createClient({
-    space: process.env.CONTENTFUL_SPACE_ID,
-    accessToken: process.env.CONTENTFUL_ACCESS_KEY
-  })
-
-  const res = await client.getEntries({ content_type: "animal" })
-
-  const x = await res.items.json();
-  const Result = x.data.map(post => ({ params: { id: post.id.toString() } }));
-  console.log({ Result });
-
-  return {
-    paths: Result,
-    fallback: false
-  }
-}
-export async function getStaticProps({ params }) {
+export async function getStaticProps() {
   const client = createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
     accessToken: process.env.CONTENTFUL_ACCESS_KEY
